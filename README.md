@@ -5,16 +5,20 @@
 
 ---
 
-## 🎓 Contexto Acadêmico
+## 📲 Download
 
-| Campo | Informação |
-|---|---|
-| Instituição | Centro Universitário Internacional UNINTER |
-| Escola | Escola Superior Politécnica – ESP |
-| Curso | CST em Análise e Desenvolvimento de Sistemas |
-| Disciplina | Atividade Extensionista I – Tecnologia Aplicada à Inclusão Digital |
-| Aluno | Angelo de Souza Treptow |
-| RU | 5154447 |
+| Versão | Data | Download |
+|---|---|---|
+| v1.0.0 — Lançamento Inicial | 11/04/2025 | [📥 AdianteDoe.apk](https://github.com/AngeloTreptow/AdianteDoe/releases/tag/V1.0.0) |
+
+### Como instalar
+
+1. Baixe o arquivo `AdianteDoe.apk` pelo link acima
+2. No Android, acesse **Configurações → Segurança → Instalar apps desconhecidos** e permita a instalação
+3. Abra o arquivo `.apk` e clique em **Instalar**
+4. Pronto — sem necessidade de cadastro, é só usar!
+
+> Compatível com Android 8.0 (API 26) ou superior.
 
 ---
 
@@ -26,18 +30,17 @@ A proposta é simples: qualquer pessoa pode **publicar um item para doação** o
 
 ---
 
-## 🌱 Objetivos de Desenvolvimento Sustentável (ODS)
+## ✨ Funcionalidades
 
-- ✅ **ODS 11** — Cidades e comunidades sustentáveis
-- ✅ **ODS 12** — Consumo e produção responsáveis
-
----
-
-## 🎯 Objetivos do Projeto
-
-- Conectar pessoas que desejam doar com aquelas que necessitam, de forma simples e segura
-- Conscientizar a comunidade sobre o impacto das doações na sustentabilidade
-- Promover o consumo consciente, evitando o descarte de itens em bom estado
+| Funcionalidade | Descrição |
+|---|---|
+| 📋 Listagem de itens | Veja todos os itens disponíveis para doação em tempo real |
+| ➕ Cadastro de item | Publique nome, foto e WhatsApp do doador |
+| 📸 Upload de foto | Selecione uma imagem da galeria (opcional, até 5MB) |
+| 💬 Contato via WhatsApp | Abre direto o WhatsApp com mensagem padrão e DDI brasileiro |
+| ⏳ Expiração automática | Itens somem automaticamente após 14 dias |
+| ✅ Validação de DDD | Aceita apenas DDDs brasileiros válidos |
+| 🚫 Sem login | Nenhum cadastro necessário para usar o app |
 
 ---
 
@@ -56,17 +59,14 @@ Antes do desenvolvimento, foi realizada uma pesquisa via **Google Forms** com mo
 
 ---
 
-## ✨ Funcionalidades Implementadas
+## 🛠️ Stack Tecnológica
 
-| Funcionalidade | Descrição |
+| Camada | Tecnologia |
 |---|---|
-| 📋 Listagem de itens | Veja todos os itens disponíveis para doação em tempo real |
-| ➕ Cadastro de item | Publique nome, foto e WhatsApp do doador |
-| 📸 Upload de foto | Selecione uma imagem da galeria (opcional, até 5MB) |
-| 💬 Contato via WhatsApp | Abre direto o WhatsApp com mensagem padrão e DDI brasileiro |
-| ⏳ Expiração automática | Itens somem automaticamente após 14 dias |
-| ✅ Validação de DDD | Aceita apenas DDDs brasileiros válidos |
-| 🚫 Sem login | Nenhum cadastro necessário para usar o app |
+| Frontend | Flutter (Dart) |
+| Banco de dados | Firebase Firestore |
+| Armazenamento de imagens | Firebase Storage |
+| Backend | Firebase (sem servidor próprio) |
 
 ---
 
@@ -90,14 +90,16 @@ lib/
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 📁 Estrutura de Dados (Firestore)
 
-| Camada | Tecnologia |
-|---|---|
-| Frontend | Flutter (Dart) |
-| Banco de dados | Firebase Firestore |
-| Armazenamento de imagens | Firebase Storage |
-| Backend | Firebase (sem servidor próprio) |
+```
+items/
+└── {id}
+    ├── name       : String     — Nome do item
+    ├── phone      : String     — WhatsApp do doador (com DDI 55)
+    ├── imageUrl   : String?    — URL da foto no Storage (opcional)
+    └── createdAt  : Timestamp  — Data de criação (item expira em 14 dias)
+```
 
 ---
 
@@ -114,8 +116,8 @@ lib/
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/adiantedoe.git
-cd adiantedoe
+git clone https://github.com/AngeloTreptow/AdianteDoe.git
+cd AdianteDoe
 
 # 2. Instale as dependências
 flutter pub get
@@ -125,19 +127,6 @@ flutter emulators --launch <nome-do-emulador>
 
 # 4. Rode o app
 flutter run
-```
-
----
-
-## 📁 Estrutura de Dados (Firestore)
-
-```
-items/
-└── {id}
-    ├── name       : String     — Nome do item
-    ├── phone      : String     — WhatsApp do doador (com DDI 55)
-    ├── imageUrl   : String?    — URL da foto no Storage (opcional)
-    └── createdAt  : Timestamp  — Data de criação (item expira em 14 dias)
 ```
 
 ---
@@ -200,6 +189,26 @@ service firebase.storage {
 - Edição ou exclusão manual de itens pelo usuário
 - Política de privacidade completa
 - Cloud Function para limpeza automática no servidor
+
+---
+
+## 🌱 Objetivos de Desenvolvimento Sustentável (ODS)
+
+- ✅ **ODS 11** — Cidades e comunidades sustentáveis
+- ✅ **ODS 12** — Consumo e produção responsáveis
+
+---
+
+## 🎓 Contexto Acadêmico
+
+| Campo | Informação |
+|---|---|
+| Instituição | Centro Universitário Internacional UNINTER |
+| Escola | Escola Superior Politécnica – ESP |
+| Curso | CST em Análise e Desenvolvimento de Sistemas |
+| Disciplina | Atividade Extensionista I – Tecnologia Aplicada à Inclusão Digital |
+| Aluno | Angelo de Souza Treptow |
+| RU | 5154447 |
 
 ---
 
