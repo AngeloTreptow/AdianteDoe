@@ -1,0 +1,26 @@
+name: adiantedoe
+description: "Aplicativo de doação e reutilização de itens entre comunidades."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  firebase_core: ^4.6.0
+  cloud_firestore: ^6.2.0
+  firebase_storage: ^13.2.0
+  image_picker: ^1.2.1
+  url_launcher: ^6.3.2
+  mask_text_input_formatter: ^2.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
