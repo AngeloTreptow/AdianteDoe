@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "462105545761",
+    "project_id": "adiantedoe",
+    "storage_bucket": "adiantedoe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462105545761:android:9dcefde0f712ac2e1b2760",
+        "android_client_info": {
+          "package_name": "com.example.adiantedoe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUN7U5Dj7ohn33XZ3z70E_q6ZA-wwwDD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
