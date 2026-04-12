@@ -1,32 +1,47 @@
 # 📦 AdianteDoe+
 
-> **Doe o que não usa. Receba o que precisa.**  
-> App mobile de doação de itens entre comunidades — simples, rápido e sem cadastro.
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![License](https://img.shields.io/badge/licença-acadêmica-green?style=for-the-badge)
+
+> **Doe o que não usa. Receba o que precisa.**
+
+Um aplicativo mobile de **doação e reutilização de itens** desenvolvido em **Flutter** com backend em **Firebase**, criado como projeto de extensão universitária com impacto social real no **Bairro Morada do Sol, Ivoti – RS**.
+
+O diferencial deste projeto é a simplicidade intencional — qualquer pessoa pode doar ou receber itens diretamente pelo **WhatsApp**, sem cadastro, sem login e sem complicação.
 
 ---
 
-## 📲 Download
+## 📸 Interface do Aplicativo
 
-| Versão | Data | Download |
-|---|---|---|
-| v1.0.0 — Lançamento Inicial | 11/04/2025 | [📥 AdianteDoe.apk](https://github.com/AngeloTreptow/AdianteDoe/releases/tag/V1.0.0) |
-
-### Como instalar
-
-1. Baixe o arquivo `AdianteDoe.apk` pelo link acima
-2. No Android, acesse **Configurações → Segurança → Instalar apps desconhecidos** e permita a instalação
-3. Abra o arquivo `.apk` e clique em **Instalar**
-4. Pronto — sem necessidade de cadastro, é só usar!
-
-> Compatível com Android 8.0 (API 26) ou superior.
-
----
-
-## 📱 Sobre o Projeto
-
-O **AdianteDoe+** é um aplicativo mobile desenvolvido em **Flutter** com backend em **Firebase**, criado como projeto de extensão universitária com impacto social real na comunidade do **Bairro Morada do Sol, Ivoti – RS**.
-
-A proposta é simples: qualquer pessoa pode **publicar um item para doação** ou **entrar em contato com um doador** diretamente pelo WhatsApp — sem precisar criar conta, sem chat interno, sem complicação.
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/1ca1d36d-a521-48d6-b060-3953ea46cf90" width="220px"/><br/>
+      <sub><b>✨ Demonstração</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/d84caa8f-fb2f-44b1-a4a0-11973d50103e" width="160px"/><br/>
+      <sub><b>🏠 Inicial</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/09d35c5c-ea39-4e6b-bb83-603940c73a7c" width="160px"/><br/>
+      <sub><b>📝 Cadastro</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/162683bd-273c-4580-ac6e-7b9a298bc8a5" width="160px"/><br/>
+      <sub><b>✅ Preenchido</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/cbe1b4f4-4e40-4115-afc3-48c5203f7c07" width="160px"/><br/>
+      <sub><b>📦 Itens</b></sub>
+    </td>
+  </tr>
+</table>
+</div>
 
 ---
 
@@ -44,22 +59,24 @@ A proposta é simples: qualquer pessoa pode **publicar um item para doação** o
 
 ---
 
-## 📊 Pesquisa com a Comunidade
+## 📲 Download
 
-Antes do desenvolvimento, foi realizada uma pesquisa via **Google Forms** com moradores do Bairro Morada do Sol para validar a proposta.
+| Versão | Data | Download |
+|---|---|---|
+| v1.0.0 — Lançamento Inicial | 11/04/2026 | [📥 AdianteDoe.apk](https://github.com/AngeloTreptow/AdianteDoe/releases/tag/V1.0.0) |
 
-| Pergunta | Resultado |
-|---|---|
-| Faixa etária predominante | 18 a 24 anos (32 pessoas) |
-| Usaria o aplicativo? | **67 disseram Sim** — 34 Talvez — 16 Não |
-| Nível de conforto digital (1–10) | Maioria entre 7 e 10 |
-| Impacto social percebido (1–10) | Maioria entre 7 e 9 |
+### Como instalar
 
-> 📌 A pesquisa validou a proposta e embasou as decisões de design — especialmente a escolha por uma interface sem login e com contato direto via WhatsApp.
+1. Baixe o arquivo `AdianteDoe.apk` pelo link acima
+2. No Android, acesse **Configurações → Segurança → Instalar apps desconhecidos** e permita a instalação
+3. Abra o arquivo `.apk` e clique em **Instalar**
+4. Pronto — sem necessidade de cadastro, é só usar!
+
+> Compatível com Android 8.0 (API 26) ou superior.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🏗️ Arquitetura e Stack
 
 | Camada | Tecnologia |
 |---|---|
@@ -67,10 +84,6 @@ Antes do desenvolvimento, foi realizada uma pesquisa via **Google Forms** com mo
 | Banco de dados | Firebase Firestore |
 | Armazenamento de imagens | Firebase Storage |
 | Backend | Firebase (sem servidor próprio) |
-
----
-
-## 🏗️ Arquitetura
 
 ```
 lib/
@@ -131,44 +144,6 @@ flutter run
 
 ---
 
-## 🔐 Segurança
-
-### Firestore Rules
-
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /items/{itemId} {
-      allow read: if true;
-      allow create: if true;
-      // Só permite deletar após 14 dias — impede deleção maliciosa
-      allow delete: if request.time >
-        resource.data.createdAt + duration.value(14, 'd');
-    }
-  }
-}
-```
-
-### Firebase Storage Rules
-
-```javascript
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /items/{fileName} {
-      allow read: if true;
-      // Só aceita imagens de até 5MB
-      allow create: if request.resource.contentType.matches('image/.*')
-                    && request.resource.size < 5 * 1024 * 1024;
-      allow delete: if false;
-    }
-  }
-}
-```
-
----
-
 ## ⚖️ Conformidade Legal
 
 | Lei | Status |
@@ -180,25 +155,6 @@ service firebase.storage {
 
 ---
 
-## 🔮 Roadmap — Próximas Funcionalidades
-
-- Login e autenticação de usuários
-- Chat interno entre doador e interessado
-- Notificações push
-- Sistema de avaliação de doadores
-- Edição ou exclusão manual de itens pelo usuário
-- Política de privacidade completa
-- Cloud Function para limpeza automática no servidor
-
----
-
-## 🌱 Objetivos de Desenvolvimento Sustentável (ODS)
-
-- ✅ **ODS 11** — Cidades e comunidades sustentáveis
-- ✅ **ODS 12** — Consumo e produção responsáveis
-
----
-
 ## 🎓 Contexto Acadêmico
 
 | Campo | Informação |
@@ -206,12 +162,13 @@ service firebase.storage {
 | Instituição | Centro Universitário Internacional UNINTER |
 | Escola | Escola Superior Politécnica – ESP |
 | Curso | CST em Análise e Desenvolvimento de Sistemas |
-| Disciplina | Atividade Extensionista I – Tecnologia Aplicada à Inclusão Digital |
+| Disciplina | Atividade Extensionista II – Tecnologia Aplicada à Inclusão Digital |
 | Aluno | Angelo de Souza Treptow |
 | RU | 5154447 |
+| ODS | 11 — Cidades sustentáveis · 12 — Consumo responsável |
 
 ---
 
 ## 📄 Licença
 
-Este projeto foi desenvolvido para fins acadêmicos como parte da Atividade Extensionista I do curso de CST em Análise e Desenvolvimento de Sistemas — UNINTER (2025).
+Este projeto foi desenvolvido para fins acadêmicos como parte da Atividade Extensionista II do curso de CST em Análise e Desenvolvimento de Sistemas — UNINTER (2026).
