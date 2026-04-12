@@ -15,29 +15,28 @@ O diferencial deste projeto é a simplicidade intencional — qualquer pessoa po
 ---
 
 ## 📸 Interface do Aplicativo
-
 <div align="center">
 <table>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/1ca1d36d-a521-48d6-b060-3953ea46cf90" width="220px"/><br/>
-      <sub><b>✨ Demonstração</b></sub>
+      <img src="https://github.com/user-attachments/assets/6a3c1892-2d1c-4f7e-bd93-da567509f36f" width="150"/><br/>
+      <b>✨ Demonstração</b>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/d84caa8f-fb2f-44b1-a4a0-11973d50103e" width="160px"/><br/>
-      <sub><b>🏠 Inicial</b></sub>
+      <img src="https://github.com/user-attachments/assets/cb1f6187-5d17-42a2-aa27-f04dc3bbdbfa" width="120" height="234"/><br/>
+      <b>🏠 Inicial</b>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/09d35c5c-ea39-4e6b-bb83-603940c73a7c" width="160px"/><br/>
-      <sub><b>📝 Cadastro</b></sub>
+      <img src="https://github.com/user-attachments/assets/bb224eb4-af1e-4c06-939f-36914addad54" width="120" height="234"/><br/>
+      <b>📝 Cadastro</b>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/162683bd-273c-4580-ac6e-7b9a298bc8a5" width="160px"/><br/>
-      <sub><b>✅ Preenchido</b></sub>
+      <img src="https://github.com/user-attachments/assets/9e41b991-6afb-415a-92b2-24bb74c24d52" width="120" height="234"/><br/>
+      <b>✅ Preenchido</b>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/cbe1b4f4-4e40-4115-afc3-48c5203f7c07" width="160px"/><br/>
-      <sub><b>📦 Itens</b></sub>
+      <img src="https://github.com/user-attachments/assets/464e9bf5-202e-479b-af5b-901916e58a66" width="120" height="234"/><br/>
+      <b>📦 Itens</b>
     </td>
   </tr>
 </table>
@@ -113,6 +112,17 @@ items/
     ├── imageUrl   : String?    — URL da foto no Storage (opcional)
     └── createdAt  : Timestamp  — Data de criação (item expira em 14 dias)
 ```
+
+---
+
+## 🔐 Segurança
+
+O app utiliza **Firebase Security Rules** para proteger o banco de dados e o storage:
+
+- Leitura pública — qualquer um pode ver os itens disponíveis
+- Escrita validada — campos obrigatórios verificados no servidor
+- Delete protegido — itens só podem ser removidos após 14 dias
+- Storage restrito — apenas imagens de até 5MB são aceitas
 
 ---
 
