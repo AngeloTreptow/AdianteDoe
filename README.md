@@ -8,9 +8,9 @@
 
 > **Doe o que não usa. Receba o que precisa.**
 
-Um aplicativo mobile de **doação e reutilização de itens** desenvolvido em **Flutter** com backend em **Firebase**, criado como projeto de extensão universitária com impacto social real no **Bairro Morada do Sol, Ivoti – RS**.
+Um aplicativo mobile de **doação e reutilização de itens**, desenvolvido em **Flutter** com backend em **Firebase**.
 
-O diferencial deste projeto é a simplicidade intencional — qualquer pessoa pode doar ou receber itens diretamente pelo **WhatsApp**, sem cadastro, sem login e sem complicação.
+Criado como projeto de extensão universitária com impacto social real, o objetivo é conectar pessoas da comunidade de forma simples e acessível.
 
 ---
 
@@ -44,6 +44,48 @@ O diferencial deste projeto é a simplicidade intencional — qualquer pessoa po
 
 ---
 
+## 🧩 Problema
+Muitas pessoas possuem itens em bom estado que não utilizam mais, mas acabam descartando por falta de uma forma simples de doar.
+
+Ao mesmo tempo, outras pessoas precisam desses itens, mas não têm acesso a eles.
+
+Além disso, soluções existentes costumam exigir cadastro, login ou processos complexos — o que dificulta o uso por pessoas com baixa familiaridade digital.
+
+---
+
+## 💡 Solução
+
+O **AdianteDoe+** conecta pessoas da comunidade de forma simples, rápida e acessível.
+
+A solução foca na **simplicidade extrema**, permitindo que qualquer pessoa publique ou encontre itens sem enfrentar barreiras tecnológicas.
+
+O uso direto do WhatsApp torna o processo mais familiar, reduzindo fricções e aumentando a adesão da comunidade.
+
+---
+
+## ⚙️ Como funciona
+
+1. 📦 O usuário cadastra um item (nome, foto e WhatsApp)  
+2. 📡 O item aparece em uma lista pública em tempo real  
+3. 🔎 Outro usuário encontra o item disponível  
+4. 💬 Entra em contato direto e combina a retirada  
+
+---
+
+## 🌱 Impacto social 
+
+* ♻️ Redução do desperdício de itens reutilizáveis
+* 🤝 Fortalecimento da comunidade local
+* 📱 Inclusão digital com uso de tecnologia acessível
+* 🌍 Incentivo ao consumo consciente
+
+**Alinhado aos Objetivos de Desenvolvimento Sustentável (ODS):**
+
+* 11 — Cidades e comunidades sustentáveis
+* 12 — Consumo e produção responsáveis
+
+---
+
 ## ✨ Funcionalidades
 
 | Funcionalidade | Descrição |
@@ -60,18 +102,17 @@ O diferencial deste projeto é a simplicidade intencional — qualquer pessoa po
 
 ## 📲 Download
 
-| Versão | Data | Download |
-|---|---|---|
-| v1.0.0 — Lançamento Inicial | 11/04/2026 | [📥 AdianteDoe.apk](https://github.com/AngeloTreptow/AdianteDoe/releases/tag/V1.0.0) |
+👉 [Baixar APK (versão mais recente)](https://github.com/AngeloTreptow/AdianteDoe/releases)
 
-### Como instalar
+<details>
+<summary>📱 Opções por tipo de celular</summary>
 
-1. Baixe o arquivo `AdianteDoe.apk` pelo link acima
-2. No Android, acesse **Configurações → Segurança → Instalar apps desconhecidos** e permita a instalação
-3. Abra o arquivo `.apk` e clique em **Instalar**
-4. Pronto — sem necessidade de cadastro, é só usar!
+| Celular | Link |
+|---|---|
+| Moderno | [APK arm64](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.0/AdianteDoe-arm64-v8a-V1.1.0.apk) |
+| Antigo | [APK armeabi](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.0/AdianteDoe-armeabi-v7a-V1.1.0.apk) |
 
-> Compatível com Android 8.0 (API 26) ou superior.
+</details>
 
 ---
 
@@ -133,7 +174,25 @@ O app utiliza **Firebase Security Rules** para proteger o banco de dados e o sto
 - [Flutter SDK](https://flutter.dev/docs/get-started/install) instalado
 - [Android Studio](https://developer.android.com/studio) com emulador configurado
 - Projeto Firebase criado com Firestore e Storage ativados
-- Arquivo `google-services.json` na pasta `android/app/`
+
+---
+
+### ⚠️ Configuração do Firebase
+
+Por motivos de segurança, alguns arquivos sensíveis não estão incluídos no repositório.
+
+Para executar o projeto corretamente, é necessário gerar e adicionar:
+
+1. `android/app/google-services.json`  
+   → Gerado no console do Firebase ao registrar o app Android  
+
+2. `lib/firebase_options.dart`  
+   → Gerado utilizando o FlutterFire CLI  
+   👉 https://firebase.flutter.dev/docs/cli/
+
+Após adicionar esses arquivos, o aplicativo estará pronto para conexão com o Firebase.
+
+---
 
 ### Passo a passo
 
