@@ -109,8 +109,8 @@ O uso direto do WhatsApp torna o processo mais familiar, reduzindo fricções e 
 
 | Celular | Link |
 |---|---|
-| Moderno | [APK arm64](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.0/AdianteDoe-arm64-v8a-V1.1.0.apk) |
-| Antigo | [APK armeabi](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.0/AdianteDoe-armeabi-v7a-V1.1.0.apk) |
+| Moderno | [APK arm64](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.1/AdianteDoe-arm64-v8a-V1.1.1.apk) |
+| Antigo | [APK armeabi](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.1.1/AdianteDoe-armeabi-v7a-V1.1.1.apk) |
 
 </details>
 
