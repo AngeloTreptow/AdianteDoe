@@ -130,11 +130,23 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 
 ---
 
-### ✅ v1.2.0 — Performance: fotos rápidas e feed eficiente *(versão atual)*
+### ✅ v1.2.0 — Performance: fotos rápidas e feed eficiente
 *Problema resolvido: imagens recarregavam a cada abertura e o feed crescia sem controle.*
 
 - **Cache de imagens em disco** com `CachedNetworkImage` — fotos carregam mais rápido e funcionam offline
 - **Limite de 25 itens na listagem** — app mais eficiente e econômico no uso de dados móveis
+
+---
+
+### ✅ v2.0.0 — Identidade própria e blindagem do backend *(versão atual)*
+*Problema resolvido: identidade de app provisória e brechas que permitiam escrita maliciosa no banco.*
+
+- **Identidade definitiva**: `applicationId` próprio (`io.github.angelotreptow.adiantedoe`) e APK assinado com chave de release própria — pré-requisitos para a Play Store
+- **Security Rules reforçadas**: lista fechada de campos, formato do telefone validado no servidor, `createdAt` gravado com horário do servidor, imagem restrita ao Firebase Storage e exclusão/edição bloqueadas para clientes
+- **Expiração via TTL nativo do Firestore** (campo `expiresAt`) — a limpeza saiu do cliente e virou responsabilidade do servidor
+- **Robustez**: falha ao publicar agora avisa o usuário e libera nova tentativa; falha no upload não publica mais item sem foto; aviso quando o WhatsApp não pode ser aberto; tratamento de erro no feed
+- **Suíte de testes automatizados**: validador de telefone, modelo de dados e fluxo do formulário
+- ⚠️ **Requer reinstalação**: por causa da troca de pacote, quem tem versão anterior precisa desinstalá-la e instalar esta
 
 ---
 
@@ -166,14 +178,21 @@ lib/
 ├── models/
 │   └── item_model.dart        # Contrato de dados: tipagem forte, serialização limpa
 ├── services/
-│   ├── firebase_service.dart  # CRUD + limpeza de itens expirados (separação de responsabilidades)
+│   ├── firebase_service.dart  # Acesso ao Firestore (injetável nas telas para testes)
 │   ├── storage_service.dart   # Upload isolado: fácil de trocar a implementação no futuro
 │   └── whatsapp_service.dart  # Integração com deep link — testável de forma isolada
 ├── screens/
 │   ├── home_screen.dart       # Stream do Firestore → UI reativa
 │   └── add_item_screen.dart   # Validação no cliente antes de qualquer escrita
+├── utils/
+│   └── phone_validator.dart   # Validação de celular BR como função pura, coberta por testes
 └── widgets/
     └── item_card.dart         # Componente reutilizável e desacoplado
+
+test/
+├── phone_validator_test.dart  # DDDs, nono dígito e comprimento
+├── item_model_test.dart       # Serialização e tolerância a dados incompletos
+└── add_item_screen_test.dart  # Fluxo do formulário com serviço fake
 ```
 
 A separação entre `screens/`, `services/` e `models/` segue o princípio de responsabilidade única: cada módulo tem uma razão para existir e uma razão para mudar. Isso facilita testes, manutenção e onboarding de novos colaboradores.
@@ -186,7 +205,8 @@ items/
     ├── name       : String     — Nome do item
     ├── phone      : String     — WhatsApp com DDI +55
     ├── imageUrl   : String?    — URL pública no Storage (nullable)
-    └── createdAt  : Timestamp  — Base para expiração automática em 14 dias
+    ├── createdAt  : Timestamp  — Horário do servidor (serverTimestamp)
+    └── expiresAt  : Timestamp  — Consumido pela política de TTL do Firestore (14 dias)
 ```
 
 ### Segurança por design
@@ -194,9 +214,9 @@ items/
 As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, mesmo que o cliente seja adulterado:
 
 - Leitura pública — qualquer um pode ver os itens disponíveis
-- Escrita validada — campos obrigatórios verificados no servidor
-- Delete protegido — itens só podem ser removidos após o período de expiração
-- Storage restrito — apenas imagens de até 5MB são aceitas
+- Escrita validada — lista fechada de campos, formato do telefone, `createdAt` igual ao horário do servidor e imagem restrita ao Firebase Storage
+- Edição e exclusão bloqueadas — nenhum cliente altera ou remove itens; a expiração é feita pela política de TTL do Firestore, no servidor
+- Storage restrito — apenas imagens de até 5MB, sem sobrescrita nem exclusão pelo app
 
 ---
 
@@ -204,19 +224,21 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 
 👉 [Ver todas as releases](https://github.com/AngeloTreptow/AdianteDoe/releases)
 
-**Versão atual: V1.2.0**
+**Versão atual: V2.0.0**
+
+> ⚠️ **Atualizando da v1.x?** Desinstale a versão antiga antes: a v2.0.0 usa um novo identificador de pacote e é instalada como um app separado.
 
 | Dispositivo | Arquitetura | Tamanho | Link |
 |---|---|---|---|
-| Android moderno (2018+) | arm64-v8a | 16.9 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.2.0/AdianteDoe-arm64-v8a-V1.2.0.apk) |
-| Android antigo | armeabi-v7a | 14.2 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V1.2.0/AdianteDoe-armeabi-v7a-V1.2.0.apk) |
+| Android moderno (2018+) | arm64-v8a | 16.9 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.0.0/AdianteDoe-arm64-v8a-V2.0.0.apk) |
+| Android antigo | armeabi-v7a | 14.2 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.0.0/AdianteDoe-armeabi-v7a-V2.0.0.apk) |
 
 <details>
 <summary>🔐 Verificar integridade dos arquivos (SHA-256)</summary>
 
 ```
-arm64-v8a:   c227aa5c068d01f589cd904900bf64e4ca9f62936d8630c875f3b730c105f837
-armeabi-v7a: ced245fe0b76dc6d64d240e7adaa2e5759124b3bca62153bc8667a05c2feeda8
+arm64-v8a:   db244611e86023564377ab13fbf98db157100c902e7c9e08dedabb91d1e3e570
+armeabi-v7a: 90c3b6ea75aa580a6afff30b599864558556531670b09e22d69d2b4c43170c87
 ```
 
 </details>
@@ -235,8 +257,10 @@ armeabi-v7a: ced245fe0b76dc6d64d240e7adaa2e5759124b3bca62153bc8667a05c2feeda8
 
 Por motivos de segurança, arquivos sensíveis não estão no repositório. É necessário gerar e adicionar:
 
-1. `android/app/google-services.json` → gerado no console do Firebase ao registrar o app Android
-2. `lib/firebase_options.dart` → gerado com o [FlutterFire CLI](https://firebase.flutter.dev/docs/cli/)
+1. `android/app/google-services.json` → gerado no console do Firebase ao registrar o app Android (obrigatório)
+2. As Security Rules do Firestore e do Storage também não são versionadas — configure-as no console do Firebase (validação de campos no `create`, exclusão bloqueada e TTL no campo `expiresAt`)
+
+Para gerar o APK de release também é necessário um keystore próprio referenciado em `android/key.properties` (fora do git).
 
 ### Passo a passo
 

@@ -5,15 +5,21 @@ import '../models/item_model.dart';
 import '../services/firebase_service.dart';
 import '../services/storage_service.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../utils/phone_validator.dart';
 
 class AddItemScreen extends StatefulWidget {
-  const AddItemScreen({super.key});
+  // Injetáveis para permitir fakes em testes; se omitidos, usam o Firebase real
+  final FirebaseService? firebaseService;
+  final StorageService? storageService;
+  const AddItemScreen({super.key, this.firebaseService, this.storageService});
 
   @override
   State<AddItemScreen> createState() => _AddItemScreenState();
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
+  late final _firebaseService = widget.firebaseService ?? FirebaseService();
+  late final _storageService = widget.storageService ?? StorageService();
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
@@ -60,24 +66,44 @@ class _AddItemScreenState extends State<AddItemScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
 
-    String? imageUrl;
-    if (_image != null) {
-      imageUrl = await StorageService().uploadImage(_image!);
+    try {
+      String? imageUrl;
+      if (_image != null) {
+        imageUrl = await _storageService.uploadImage(_image!);
+      }
+
+      // Pega número limpo e já adiciona o DDI 55
+      final cleanPhone = '55${_maskFormatter.getUnmaskedText()}';
+
+      final item = ItemModel(
+        id: '',
+        name: _nameCtrl.text.trim(),
+        phone: cleanPhone, // salva com DDI direto
+        imageUrl: imageUrl,
+        createdAt: DateTime.now(),
+      );
+
+      await _firebaseService.addItem(item);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Não foi possível publicar. Verifique sua conexão e tente novamente.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
+  }
 
-    // Pega número limpo e já adiciona o DDI 55
-    final cleanPhone = '55${_maskFormatter.getUnmaskedText()}';
-
-    final item = ItemModel(
-      id: '',
-      name: _nameCtrl.text.trim(),
-      phone: cleanPhone, // salva com DDI direto
-      imageUrl: imageUrl,
-      createdAt: DateTime.now(),
-    );
-
-    await FirebaseService().addItem(item);
-    if (mounted) Navigator.pop(context);
+  @override
+  void dispose() {
+    _nameCtrl.dispose();
+    _phoneCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -163,35 +189,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Informe o WhatsApp';
-
-                  final digits = _maskFormatter.getUnmaskedText();
-
-                  if (digits.length != 11) {
-                    return 'Informe o número completo com o 9. Ex: (51) 98888-7777';
-                  }
-
-                  if (digits[2] != '9') {
-                    return 'O celular deve começar com 9 após o DDD';
-                  }
-
-                  const dddsValidos = [
-                    11, 12, 13, 14, 15, 16, 17, 18, 19,
-                    21, 22, 24, 27, 28,
-                    31, 32, 33, 34, 35, 37, 38,
-                    41, 42, 43, 44, 45, 46, 47, 48, 49,
-                    51, 53, 54, 55,
-                    61, 62, 63, 64, 65, 66, 67, 68, 69,
-                    71, 73, 74, 75, 77, 79,
-                    81, 82, 83, 84, 85, 86, 87, 88, 89,
-                    91, 92, 93, 94, 95, 96, 97, 98, 99,
-                  ];
-
-                  final ddd = int.tryParse(digits.substring(0, 2));
-                  if (ddd == null || !dddsValidos.contains(ddd)) {
-                    return 'DDD inválido';
-                  }
-
-                  return null;
+                  return validatePhoneDigits(_maskFormatter.getUnmaskedText());
                 },
               ),
               const SizedBox(height: 32),
