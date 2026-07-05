@@ -1,7 +1,8 @@
 import 'package:url_launcher/url_launcher.dart';
 
 class WhatsAppService {
-  static Future<void> openWhatsApp(String phone) async {
+  /// Retorna false se não foi possível abrir o WhatsApp.
+  static Future<bool> openWhatsApp(String phone) async {
     // Remove tudo que não for número
     String digits = phone.replaceAll(RegExp(r'\D'), '');
 
@@ -17,8 +18,11 @@ class WhatsAppService {
 
     final url = Uri.parse('https://wa.me/$digits?text=$message');
 
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+    // canLaunchUrl dá falso negativo em Android 11+; tenta abrir direto
+    try {
+      return await launchUrl(url, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      return false;
     }
   }
 }

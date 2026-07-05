@@ -55,7 +55,17 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton.icon(
-                  onPressed: () => WhatsAppService.openWhatsApp(item.phone),
+                  onPressed: () async {
+                    final opened =
+                        await WhatsAppService.openWhatsApp(item.phone);
+                    if (!opened && context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Não foi possível abrir o WhatsApp.'),
+                        ),
+                      );
+                    }
+                  },
                   icon: const Icon(Icons.chat, size: 18),
                   label: const Text('Contato'),
                   style: ElevatedButton.styleFrom(
