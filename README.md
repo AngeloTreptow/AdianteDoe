@@ -12,7 +12,7 @@
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Status](https://img.shields.io/badge/status-produção-brightgreen?style=for-the-badge)
 
-[📲 Baixar APK](#-download) · [🏗️ Stack Técnica](#️-decisões-de-engenharia)
+[📲 Baixar APK](#-download) · [🏗️ Stack Técnica](#️-decisões-de-engenharia) · [🔒 Política de Privacidade](https://angelotreptow.github.io/AdianteDoe/)
 
 </div>
 
@@ -296,6 +296,8 @@ O AdianteDoe+ foi construído com impacto mensurável em mente, alinhado aos Obj
 |---|---|
 | LGPD (Lei 13.709/2018) | Coleta mínima de dados, sem armazenamento de e-mail ou CPF, e expiração automática em 14 dias |
 | Marco Civil da Internet (Lei 12.965/2014) | Aviso de responsabilidade sobre o conteúdo publicado exibido na tela de cadastro |
+
+📜 A **[Política de Privacidade](https://angelotreptow.github.io/AdianteDoe/)** completa está publicada via GitHub Pages e detalha quais dados são coletados, como são usados e por quanto tempo permanecem armazenados.
 
 ---
 
