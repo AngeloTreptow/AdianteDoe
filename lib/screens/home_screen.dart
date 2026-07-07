@@ -51,8 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           final items = snapshot.data!;
           return ListView.builder(
+            // Respiro no fim da lista: sem ele, o FAB "Doar item" cobre o
+            // botão de contato do último card quando a lista rola
+            padding: const EdgeInsets.only(bottom: 88),
             itemCount: items.length,
-            itemBuilder: (_, i) => ItemCard(item: items[i]),
+            itemBuilder: (_, i) =>
+                ItemCard(item: items[i], service: widget.service),
           );
         },
       ),
