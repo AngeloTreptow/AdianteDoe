@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:adiantedoe/models/item_model.dart';
@@ -106,5 +107,41 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(FeedbackScreen), findsOneWidget);
+  });
+
+  testWidgets('política de privacidade abre a URL certa; falha mostra SnackBar',
+      (tester) async {
+    // Mocka o canal do url_launcher (sem handler o launchUrl nunca completa
+    // em testes) simulando falha ao abrir o navegador
+    const channel = MethodChannel('plugins.flutter.io/url_launcher');
+    final log = <MethodCall>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel,
+        (call) async {
+      log.add(call);
+      return false;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null));
+
+    await tester.pumpWidget(
+      MaterialApp(home: HomeScreen(service: _FakeFirebaseService(const []))),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Política de Privacidade'));
+    await tester.pumpAndSettle();
+
+    expect(log, hasLength(1));
+    expect(
+      log.single.arguments['url'],
+      'https://angelotreptow.github.io/AdianteDoe/',
+    );
+    // Falha ao abrir não crasha nem abre tela: só avisa
+    expect(
+      find.textContaining('Não foi possível abrir a política'),
+      findsOneWidget,
+    );
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/firebase_service.dart';
 import '../widgets/item_card.dart';
 import 'about_screen.dart';
@@ -6,8 +7,11 @@ import 'add_item_screen.dart';
 import 'community_rules_screen.dart';
 import 'feedback_screen.dart';
 
+// Página pública com a política de privacidade do app
+const _privacyPolicyUrl = 'https://angelotreptow.github.io/AdianteDoe/';
+
 // Opções do menu da AppBar
-enum _MenuOption { about, communityRules, feedback }
+enum _MenuOption { about, communityRules, feedback, privacyPolicy }
 
 class HomeScreen extends StatefulWidget {
   // Injetável para permitir fakes em testes; se omitido, usa o Firebase real
@@ -22,6 +26,32 @@ class _HomeScreenState extends State<HomeScreen> {
   // Stream criado uma única vez — recriar no build abriria um novo listener a cada rebuild
   late final _itemsStream = (widget.service ?? FirebaseService()).getItems();
 
+  void _pushScreen(Widget screen) =>
+      Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+
+  // Abre a política no navegador externo. Sem canLaunchUrl, que dá falso
+  // negativo em Android 11+: tenta abrir direto, como no WhatsAppService
+  Future<void> _openPrivacyPolicy() async {
+    bool opened;
+    try {
+      opened = await launchUrl(
+        Uri.parse(_privacyPolicyUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      // Log para diagnóstico; a UI mostra só a mensagem
+      debugPrint('Falha ao abrir a política de privacidade: $e');
+      opened = false;
+    }
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível abrir a política de privacidade.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,16 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           PopupMenuButton<_MenuOption>(
             tooltip: 'Menu',
-            onSelected: (option) => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => switch (option) {
-                  _MenuOption.about => const AboutScreen(),
-                  _MenuOption.communityRules => const CommunityRulesScreen(),
-                  _MenuOption.feedback => FeedbackScreen(service: widget.service),
-                },
-              ),
-            ),
+            onSelected: (option) => switch (option) {
+              _MenuOption.about => _pushScreen(const AboutScreen()),
+              _MenuOption.communityRules =>
+                _pushScreen(const CommunityRulesScreen()),
+              _MenuOption.feedback =>
+                _pushScreen(FeedbackScreen(service: widget.service)),
+              // Não abre tela: vai direto para o navegador externo
+              _MenuOption.privacyPolicy => _openPrivacyPolicy(),
+            },
             itemBuilder: (_) => const [
               PopupMenuItem(
                 value: _MenuOption.about,
@@ -63,6 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListTile(
                   leading: Icon(Icons.lightbulb_outline),
                   title: Text('Enviar sugestão'),
+                ),
+              ),
+              PopupMenuItem(
+                value: _MenuOption.privacyPolicy,
+                child: ListTile(
+                  leading: Icon(Icons.privacy_tip_outlined),
+                  title: Text('Política de Privacidade'),
                 ),
               ),
             ],
