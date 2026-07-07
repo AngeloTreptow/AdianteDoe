@@ -139,7 +139,7 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 
 ---
 
-### ✅ v2.0.0 — Identidade própria e blindagem do backend *(versão atual)*
+### ✅ v2.0.0 — Identidade própria e blindagem do backend
 *Problema resolvido: identidade de app provisória e brechas que permitiam escrita maliciosa no banco.*
 
 - **Identidade definitiva**: `applicationId` próprio (`io.github.angelotreptow.adiantedoe`) e APK assinado com chave de release própria — pré-requisitos para a Play Store
@@ -151,7 +151,7 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 
 ---
 
-### 🚧 v2.1.0 — Moderação comunitária e proteção contra abuso *(em preparação)*
+### ✅ v2.1.0 — Moderação comunitária e proteção contra abuso *(versão atual)*
 *Problema resolvido: nenhum canal para a comunidade sinalizar golpes, e nada impedia denúncias em massa ou clientes adulterados.*
 
 - **Botão de denúncia** em cada item, com motivo opcional — a coleção `reports` é write-only para clientes (só o administrador lê)
@@ -249,21 +249,21 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 
 👉 [Ver todas as releases](https://github.com/AngeloTreptow/AdianteDoe/releases)
 
-**Versão atual: V2.0.0**
+**Versão atual: V2.1.0**
 
-> ⚠️ **Atualizando da v1.x?** Desinstale a versão antiga antes: a v2.0.0 usa um novo identificador de pacote e é instalada como um app separado.
+> ⚠️ **Atualizando da v1.x?** Desinstale a versão antiga antes: a partir da v2.0.0 o app usa um novo identificador de pacote e é instalado como um app separado. Quem já tem a v2.0.0 atualiza por cima, normalmente.
 
 | Dispositivo | Arquitetura | Tamanho | Link |
 |---|---|---|---|
-| Android moderno (2018+) | arm64-v8a | 16.9 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.0.0/AdianteDoe-arm64-v8a-V2.0.0.apk) |
-| Android antigo | armeabi-v7a | 14.2 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.0.0/AdianteDoe-armeabi-v7a-V2.0.0.apk) |
+| Android moderno (2018+) | arm64-v8a | 17.6 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.1.0/AdianteDoe-arm64-v8a-V2.1.0.apk) |
+| Android antigo | armeabi-v7a | 15.0 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.1.0/AdianteDoe-armeabi-v7a-V2.1.0.apk) |
 
 <details>
 <summary>🔐 Verificar integridade dos arquivos (SHA-256)</summary>
 
 ```
-arm64-v8a:   db244611e86023564377ab13fbf98db157100c902e7c9e08dedabb91d1e3e570
-armeabi-v7a: 90c3b6ea75aa580a6afff30b599864558556531670b09e22d69d2b4c43170c87
+arm64-v8a:   c16d885fdd7ab3843298cfe4a6105a5134d2f35b7553b44597a7d527a38f3719
+armeabi-v7a: e2600b622fad846c25a7b4c9eb24601a7d71860ef7983aff692c2da453c592eb
 ```
 
 </details>
