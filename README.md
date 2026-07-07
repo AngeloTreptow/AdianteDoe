@@ -92,6 +92,9 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 | ⏳ **Curadoria automática** | Itens somem automaticamente após 14 dias, mantendo o feed limpo sem moderação manual |
 | 🛡️ **Validação inteligente** | DDDs brasileiros validados no cliente e regras de segurança aplicadas no servidor (Firebase Security Rules) |
 | 🚩 **Moderação comunitária** | Qualquer pessoa pode denunciar um item suspeito com um toque — sem criar conta. Uma denúncia por item por dispositivo, garantida no servidor |
+| 🔍 **Detalhe do item** | Toque no card abre a foto ampliada (com zoom) e a descrição completa da doação |
+| 💡 **Voz da comunidade** | Espaço de sugestões sem conta — mensagens vão direto para o administrador, com limite diário garantido no servidor |
+| 📖 **Transparência no app** | Seções "Sobre o app", "Regras da comunidade" e Política de Privacidade acessíveis pelo menu |
 
 ---
 
@@ -151,7 +154,7 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 
 ---
 
-### ✅ v2.1.0 — Moderação comunitária e proteção contra abuso *(versão atual)*
+### ✅ v2.1.0 — Moderação comunitária e proteção contra abuso
 *Problema resolvido: nenhum canal para a comunidade sinalizar golpes, e nada impedia denúncias em massa ou clientes adulterados.*
 
 - **Botão de denúncia** em cada item, com motivo opcional — a coleção `reports` é write-only para clientes (só o administrador lê)
@@ -160,6 +163,17 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 - **Cooldown de 30s** entre denúncias no cliente, contra toques repetidos
 - **App Check com Play Integrity**: atesta que as requisições vêm do app legítimo (em modo de monitoramento; bloqueio será ativado após validação das métricas)
 - Política de Privacidade atualizada: identificador anônimo e verificação de integridade documentados
+
+---
+
+### ✅ v2.2.0 — Transparência, participação e detalhe do item *(versão atual)*
+*Problema resolvido: itens com pouca informação na vitrine, nenhum espaço explicando o app e suas regras, e nenhum canal para a comunidade sugerir melhorias.*
+
+- **Tela de detalhe do item**: toque no card abre foto ampliada (com zoom por pinça) e descrição completa — novo campo de **descrição opcional** no cadastro (até 1000 caracteres, validado no servidor)
+- **Menu na tela inicial** com quatro seções novas: *Sobre o app*, *Regras da comunidade* (o que pode e não pode ser doado — alinhado à política de conteúdo gerado por usuários do Google Play), *Enviar sugestão* e *Política de Privacidade*
+- **Canal de sugestões sem conta**: mensagens gravadas em coleção write-only (só o administrador lê), com limite de **uma sugestão por dispositivo por dia garantido no servidor** — mesmo padrão de proteção das denúncias
+- **Splash screen nativa** (`flutter_native_splash`): logo do app cobre o tempo real de inicialização do Firebase, sem espera artificial
+- **Usabilidade**: menu fecha ao tocar ou arrastar fora dele (`MenuAnchor`) e placeholders dos formulários em cinza claro, distintos do texto digitado
 
 ---
 
@@ -187,28 +201,38 @@ O armazenamento de imagens via Firebase Storage permite CDN global out-of-the-bo
 
 ```
 lib/
-├── main.dart                  # Entrada + Firebase, App Check e login anônimo transparente
+├── main.dart                        # Entrada + Firebase, App Check e login anônimo transparente
 ├── models/
-│   ├── item_model.dart        # Contrato de dados: tipagem forte, serialização limpa
-│   └── report_model.dart      # Denúncia write-only: sem fromMap, só o admin lê
+│   ├── item_model.dart              # Contrato de dados: tipagem forte, serialização limpa
+│   ├── report_model.dart            # Denúncia write-only: sem fromMap, só o admin lê
+│   └── feedback_model.dart          # Sugestão write-only: mesmo padrão das denúncias
 ├── services/
-│   ├── firebase_service.dart  # Acesso ao Firestore (injetável nas telas para testes)
-│   ├── storage_service.dart   # Upload isolado: fácil de trocar a implementação no futuro
-│   └── whatsapp_service.dart  # Integração com deep link — testável de forma isolada
+│   ├── firebase_service.dart        # Acesso ao Firestore (injetável nas telas para testes)
+│   ├── storage_service.dart         # Upload isolado: fácil de trocar a implementação no futuro
+│   └── whatsapp_service.dart        # Integração com deep link — testável de forma isolada
 ├── screens/
-│   ├── home_screen.dart       # Stream do Firestore → UI reativa
-│   └── add_item_screen.dart   # Validação no cliente antes de qualquer escrita
+│   ├── home_screen.dart             # Stream do Firestore → UI reativa + menu da AppBar
+│   ├── add_item_screen.dart         # Validação no cliente antes de qualquer escrita
+│   ├── item_detail_screen.dart      # Foto ampliada com zoom + descrição completa
+│   ├── feedback_screen.dart         # Sugestões da comunidade (limite diário no servidor)
+│   ├── about_screen.dart            # Objetivo do app e como funciona
+│   └── community_rules_screen.dart  # O que pode e não pode ser doado
 ├── utils/
-│   └── phone_validator.dart   # Validação de celular BR como função pura, coberta por testes
+│   └── phone_validator.dart         # Validação de celular BR como função pura, coberta por testes
 └── widgets/
-    └── item_card.dart         # Card do item + fluxo de denúncia com cooldown
+    ├── item_card.dart               # Card do item na vitrine (toque abre o detalhe)
+    └── report_button.dart           # Fluxo de denúncia com cooldown, reutilizado no card e no detalhe
 
 test/
-├── phone_validator_test.dart  # DDDs, nono dígito e comprimento
-├── item_model_test.dart       # Serialização e tolerância a dados incompletos
-├── report_model_test.dart     # Campos aceitos pelas regras e motivo opcional
-├── item_card_test.dart        # Denúncia: envio, cancelamento, cooldown e duplicata
-└── add_item_screen_test.dart  # Fluxo do formulário com serviço fake
+├── phone_validator_test.dart        # DDDs, nono dígito e comprimento
+├── item_model_test.dart             # Serialização e tolerância a dados incompletos
+├── report_model_test.dart           # Campos aceitos pelas regras e motivo opcional
+├── feedback_model_test.dart         # Campos aceitos pelas regras da coleção de sugestões
+├── item_card_test.dart              # Denúncia: envio, cancelamento, cooldown e duplicata
+├── item_detail_screen_test.dart     # Detalhe: descrição, data e denúncia
+├── feedback_screen_test.dart        # Sugestões: validação, envio, limite diário e erros
+├── home_screen_test.dart            # Vitrine, menu da AppBar e link da política
+└── add_item_screen_test.dart        # Fluxo do formulário com serviço fake
 ```
 
 A separação entre `screens/`, `services/` e `models/` segue o princípio de responsabilidade única: cada módulo tem uma razão para existir e uma razão para mudar. Isso facilita testes, manutenção e onboarding de novos colaboradores.
@@ -218,17 +242,24 @@ A separação entre `screens/`, `services/` e `models/` segue o princípio de re
 ```
 items/
 └── {id}
-    ├── name       : String     — Nome do item
-    ├── phone      : String     — WhatsApp com DDI +55
-    ├── imageUrl   : String?    — URL pública no Storage (nullable)
-    ├── createdAt  : Timestamp  — Horário do servidor (serverTimestamp)
-    └── expiresAt  : Timestamp  — Consumido pela política de TTL do Firestore (14 dias)
+    ├── name        : String     — Nome do item
+    ├── phone       : String     — WhatsApp com DDI +55
+    ├── description : String?    — Descrição opcional (até 1000 caracteres)
+    ├── imageUrl    : String?    — URL pública no Storage (nullable)
+    ├── createdAt   : Timestamp  — Horário do servidor (serverTimestamp)
+    └── expiresAt   : Timestamp  — Consumido pela política de TTL do Firestore (14 dias)
 
 reports/
-└── {uid}_{itemId}              — ID determinístico: 1 denúncia por item por dispositivo
-    ├── itemId     : String     — Item denunciado
-    ├── reason     : String?    — Motivo opcional (até 200 caracteres)
-    └── createdAt  : Timestamp  — Horário do servidor (serverTimestamp)
+└── {uid}_{itemId}               — ID determinístico: 1 denúncia por item por dispositivo
+    ├── itemId      : String     — Item denunciado
+    ├── reason      : String?    — Motivo opcional (até 200 caracteres)
+    └── createdAt   : Timestamp  — Horário do servidor (serverTimestamp)
+
+feedback/
+└── {uid}_{dia}                  — ID determinístico: 1 sugestão por dispositivo por dia
+    ├── message     : String     — Sugestão (até 1000 caracteres)
+    ├── day         : String     — Dia local (AAAA-MM-DD), amarrado ao ID pelo servidor
+    └── createdAt   : Timestamp  — Horário do servidor (serverTimestamp)
 ```
 
 ### Segurança por design
@@ -241,6 +272,7 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 - Storage restrito — apenas imagens de até 5MB, sem sobrescrita nem exclusão pelo app
 - Denúncias write-only — clientes só criam; leitura, edição e exclusão são exclusivas do administrador
 - Denúncia exige sessão (login anônimo) e o ID `{uid}_{itemId}` é validado no servidor — duplicata é rejeitada mesmo com cliente adulterado
+- Sugestões seguem o mesmo padrão: write-only, sessão obrigatória e ID `{uid}_{dia}` validado no servidor — no máximo uma por dispositivo por dia
 - App Check (Play Integrity) atesta a origem das requisições — hoje em modo de monitoramento, com bloqueio a ativar via console
 
 ---
@@ -249,21 +281,21 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 
 👉 [Ver todas as releases](https://github.com/AngeloTreptow/AdianteDoe/releases)
 
-**Versão atual: V2.1.0**
+**Versão atual: V2.2.0**
 
-> ⚠️ **Atualizando da v1.x?** Desinstale a versão antiga antes: a partir da v2.0.0 o app usa um novo identificador de pacote e é instalado como um app separado. Quem já tem a v2.0.0 atualiza por cima, normalmente.
+> ⚠️ **Atualizando da v1.x?** Desinstale a versão antiga antes: a partir da v2.0.0 o app usa um novo identificador de pacote e é instalado como um app separado. Quem já tem a v2.0.0 ou superior atualiza por cima, normalmente.
 
 | Dispositivo | Arquitetura | Tamanho | Link |
 |---|---|---|---|
-| Android moderno (2018+) | arm64-v8a | 17.6 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.1.0/AdianteDoe-arm64-v8a-V2.1.0.apk) |
-| Android antigo | armeabi-v7a | 15.0 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.1.0/AdianteDoe-armeabi-v7a-V2.1.0.apk) |
+| Android moderno (2018+) | arm64-v8a | 18.4 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.2.0/AdianteDoe-arm64-v8a-V2.2.0.apk) |
+| Android antigo | armeabi-v7a | 15.8 MB | [Baixar APK](https://github.com/AngeloTreptow/AdianteDoe/releases/download/V2.2.0/AdianteDoe-armeabi-v7a-V2.2.0.apk) |
 
 <details>
 <summary>🔐 Verificar integridade dos arquivos (SHA-256)</summary>
 
 ```
-arm64-v8a:   c18bc495c0631b6156d0ab55242369bd0c8124f5d3a4b63a98ef7497243d62ba
-armeabi-v7a: 95188835de69c322996f226151913bba4a08c6b5a3eaa3c77c99ec0ce25cf938
+arm64-v8a:   6225f0d097391c665be1ef3399cb5b86191aee2bc2bdf03d45d9a91aa9271e32
+armeabi-v7a: 67f197197667746ebbbe20871cef6b5dc9f29ab9a955ace66d9891c9fc6c2da1
 ```
 
 </details>
@@ -283,7 +315,7 @@ armeabi-v7a: 95188835de69c322996f226151913bba4a08c6b5a3eaa3c77c99ec0ce25cf938
 Por motivos de segurança, arquivos sensíveis não estão no repositório. É necessário gerar e adicionar:
 
 1. `android/app/google-services.json` → gerado no console do Firebase ao registrar o app Android (obrigatório)
-2. As Security Rules do Firestore e do Storage também não são versionadas — configure-as no console do Firebase (validação de campos no `create`, exclusão bloqueada, TTL no campo `expiresAt` e regras da coleção `reports`)
+2. As Security Rules do Firestore e do Storage também não são versionadas — configure-as no console do Firebase (validação de campos no `create`, exclusão bloqueada, TTL no campo `expiresAt` e regras das coleções `reports` e `feedback`)
 3. **Authentication** → habilite o provedor **Anônimo** (Sign-in method), usado pelas denúncias
 4. **App Check** → registre o app Android com o provider Play Integrity; para rodar em debug, cadastre o token de depuração que aparece no logcat
 

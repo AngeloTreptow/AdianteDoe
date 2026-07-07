@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:adiantedoe/models/item_model.dart';
+import 'package:adiantedoe/screens/item_detail_screen.dart';
 import 'package:adiantedoe/services/firebase_service.dart';
 import 'package:adiantedoe/widgets/item_card.dart';
+import 'package:adiantedoe/widgets/report_button.dart';
 
 class _FakeFirebaseService extends FirebaseService {
   final reportedItemIds = <String>[];
@@ -47,7 +49,16 @@ Future<void> _report(WidgetTester tester, {String? reason}) async {
 }
 
 void main() {
-  setUp(ItemCard.resetReportCooldown);
+  setUp(ReportButton.resetReportCooldown);
+
+  testWidgets('tocar no card abre a tela de detalhe', (tester) async {
+    await _pumpCard(tester, _FakeFirebaseService());
+
+    await tester.tap(find.text('Sofá 2 lugares'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ItemDetailScreen), findsOneWidget);
+  });
 
   testWidgets('denunciar com motivo grava na coleção e mostra confirmação',
       (tester) async {

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../models/feedback_model.dart';
 import '../models/item_model.dart';
 import '../models/report_model.dart';
 
@@ -10,6 +11,9 @@ class FirebaseService {
 
   CollectionReference<Map<String, dynamic>> get _reportsCol =>
       FirebaseFirestore.instance.collection('reports');
+
+  CollectionReference<Map<String, dynamic>> get _feedbackCol =>
+      FirebaseFirestore.instance.collection('feedback');
 
   Future<void> addItem(ItemModel item) async {
     await _col.add(item.toMap());
@@ -45,6 +49,32 @@ class FirebaseService {
             itemId: itemId,
             reason: reason,
             createdAt: DateTime.now(),
+          ).toMap(),
+        );
+  }
+
+  // Grava a sugestão na coleção `feedback`, seguindo o mesmo padrão de
+  // `reports`: create-only e ID determinístico. Aqui o ID é {uid}_{dia},
+  // então as regras do Firestore limitam a uma sugestão por dispositivo
+  // por dia (a segunda tentativa falha com permission-denied).
+  Future<void> sendFeedback(String message) async {
+    // Recupera a sessão anônima caso o login do bootstrap tenha falhado,
+    // como em reportItem
+    final user = FirebaseAuth.instance.currentUser ??
+        (await FirebaseAuth.instance.signInAnonymously()).user;
+    if (user == null) {
+      throw StateError('Sem sessão anônima para enviar a sugestão');
+    }
+    final now = DateTime.now();
+    final day = '${now.year.toString().padLeft(4, '0')}'
+        '-${now.month.toString().padLeft(2, '0')}'
+        '-${now.day.toString().padLeft(2, '0')}';
+    await _feedbackCol.doc('${user.uid}_$day').set(
+          FeedbackModel(
+            id: '',
+            message: message,
+            day: day,
+            createdAt: now,
           ).toMap(),
         );
   }

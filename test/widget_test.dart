@@ -17,7 +17,7 @@ void main() {
 
       expect(
         map.keys.toSet(),
-        {'name', 'phone', 'imageUrl', 'createdAt', 'expiresAt'},
+        {'name', 'phone', 'description', 'imageUrl', 'createdAt', 'expiresAt'},
       );
       expect(map['name'], 'Sofá 2 lugares');
       expect(map['phone'], '5551999998888');

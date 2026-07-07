@@ -1,7 +1,7 @@
 name: adiantedoe
 description: "Aplicativo de doação e reutilização de itens entre comunidades."
 publish_to: 'none'
-version: 2.1.0+2
+version: 2.2.0+3
 
 environment:
   sdk: ^3.11.4
@@ -25,9 +25,25 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
 
 
 flutter_launcher_icons: { android: true, ios: false, image_path: "assets/icon/icon.png" }
+
+# Splash nativa (regenerar com: dart run flutter_native_splash:create).
+# A splash cobre o bootstrap real (Firebase, Auth, App Check) e some quando
+# o primeiro frame do Flutter renderiza — sem delay artificial.
+flutter_native_splash:
+  color: "#ffffff"
+  color_dark: "#121212"
+  image: assets/icon/icon.png
+  # Android 12+ mascara a imagem num círculo de 768px (canvas de 1152px):
+  # usa a variante com respiro para não cortar os cantos do logo
+  android_12:
+    color: "#ffffff"
+    color_dark: "#121212"
+    image: assets/splash/splash_icon_android12.png
+  web: false
 
 flutter:
   uses-material-design: true

@@ -22,6 +22,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   late final _storageService = widget.storageService ?? StorageService();
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
+  final _descriptionCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _maskFormatter = MaskTextInputFormatter(
     mask: '(##) #####-####',
@@ -75,10 +76,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
       // Pega número limpo e já adiciona o DDI 55
       final cleanPhone = '55${_maskFormatter.getUnmaskedText()}';
 
+      // Descrição vazia vira null: as regras aceitam null, e a tela de
+      // detalhe usa a ausência para mostrar o texto padrão
+      final description = _descriptionCtrl.text.trim();
+
       final item = ItemModel(
         id: '',
         name: _nameCtrl.text.trim(),
         phone: cleanPhone, // salva com DDI direto
+        description: description.isEmpty ? null : description,
         imageUrl: imageUrl,
         createdAt: DateTime.now(),
       );
@@ -102,6 +108,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _descriptionCtrl.dispose();
     _phoneCtrl.dispose();
     super.dispose();
   }
@@ -171,8 +178,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   labelText: 'Nome do item *',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.inventory_2_outlined),
+                  hintText: 'Ex.: Sofá de 2 lugares',
                 ),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Informe o nome do item' : null,
+              ),
+              const SizedBox(height: 16),
+
+              // Descrição (opcional) — limite espelhado nas regras do Firestore
+              TextFormField(
+                controller: _descriptionCtrl,
+                maxLength: 1000,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  labelText: 'Descrição (opcional)',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.notes_outlined),
+                  hintText: 'Estado do item, medidas, defeitos, retirada...',
+                  alignLabelWithHint: true,
+                ),
               ),
               const SizedBox(height: 16),
 
