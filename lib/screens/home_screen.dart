@@ -10,9 +10,6 @@ import 'feedback_screen.dart';
 // Página pública com a política de privacidade do app
 const _privacyPolicyUrl = 'https://angelotreptow.github.io/AdianteDoe/';
 
-// Opções do menu da AppBar
-enum _MenuOption { about, communityRules, feedback, privacyPolicy }
-
 class HomeScreen extends StatefulWidget {
   // Injetável para permitir fakes em testes; se omitido, usa o Firebase real
   final FirebaseService? service;
@@ -61,47 +58,41 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
         actions: [
-          PopupMenuButton<_MenuOption>(
-            tooltip: 'Menu',
-            onSelected: (option) => switch (option) {
-              _MenuOption.about => _pushScreen(const AboutScreen()),
-              _MenuOption.communityRules =>
-                _pushScreen(const CommunityRulesScreen()),
-              _MenuOption.feedback =>
-                _pushScreen(FeedbackScreen(service: widget.service)),
-              // Não abre tela: vai direto para o navegador externo
-              _MenuOption.privacyPolicy => _openPrivacyPolicy(),
-            },
-            itemBuilder: (_) => const [
-              PopupMenuItem(
-                value: _MenuOption.about,
-                child: ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text('Sobre o app'),
-                ),
+          // MenuAnchor em vez de PopupMenuButton: fecha assim que o dedo
+          // encosta fora do menu (inclusive iniciando um arrasto), enquanto
+          // o PopupMenuButton só fecha com um tap completo na barreira
+          MenuAnchor(
+            consumeOutsideTap: true,
+            menuChildren: [
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.info_outline),
+                onPressed: () => _pushScreen(const AboutScreen()),
+                child: const Text('Sobre o app'),
               ),
-              PopupMenuItem(
-                value: _MenuOption.communityRules,
-                child: ListTile(
-                  leading: Icon(Icons.gavel_outlined),
-                  title: Text('Regras da comunidade'),
-                ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.gavel_outlined),
+                onPressed: () => _pushScreen(const CommunityRulesScreen()),
+                child: const Text('Regras da comunidade'),
               ),
-              PopupMenuItem(
-                value: _MenuOption.feedback,
-                child: ListTile(
-                  leading: Icon(Icons.lightbulb_outline),
-                  title: Text('Enviar sugestão'),
-                ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.lightbulb_outline),
+                onPressed: () =>
+                    _pushScreen(FeedbackScreen(service: widget.service)),
+                child: const Text('Enviar sugestão'),
               ),
-              PopupMenuItem(
-                value: _MenuOption.privacyPolicy,
-                child: ListTile(
-                  leading: Icon(Icons.privacy_tip_outlined),
-                  title: Text('Política de Privacidade'),
-                ),
+              MenuItemButton(
+                leadingIcon: const Icon(Icons.privacy_tip_outlined),
+                // Não abre tela: vai direto para o navegador externo
+                onPressed: _openPrivacyPolicy,
+                child: const Text('Política de Privacidade'),
               ),
             ],
+            builder: (_, controller, _) => IconButton(
+              tooltip: 'Menu',
+              icon: const Icon(Icons.more_vert),
+              onPressed: () =>
+                  controller.isOpen ? controller.close() : controller.open(),
+            ),
           ),
         ],
       ),

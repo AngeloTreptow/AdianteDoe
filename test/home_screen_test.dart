@@ -109,6 +109,24 @@ void main() {
     expect(find.byType(FeedbackScreen), findsOneWidget);
   });
 
+  testWidgets('tocar ou arrastar fora do menu fecha o menu', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: HomeScreen(service: _FakeFirebaseService(const []))),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sobre o app'), findsOneWidget);
+
+    // Inicia um arrasto fora do menu: o toque inicial já deve fechá-lo
+    // (com PopupMenuButton isso não fechava — só um tap completo fechava)
+    await tester.dragFrom(const Offset(50, 400), const Offset(0, -80));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sobre o app'), findsNothing);
+  });
+
   testWidgets('política de privacidade abre a URL certa; falha mostra SnackBar',
       (tester) async {
     // Mocka o canal do url_launcher (sem handler o launchUrl nunca completa
