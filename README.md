@@ -262,8 +262,8 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 <summary>🔐 Verificar integridade dos arquivos (SHA-256)</summary>
 
 ```
-arm64-v8a:   c16d885fdd7ab3843298cfe4a6105a5134d2f35b7553b44597a7d527a38f3719
-armeabi-v7a: e2600b622fad846c25a7b4c9eb24601a7d71860ef7983aff692c2da453c592eb
+arm64-v8a:   c18bc495c0631b6156d0ab55242369bd0c8124f5d3a4b63a98ef7497243d62ba
+armeabi-v7a: 95188835de69c322996f226151913bba4a08c6b5a3eaa3c77c99ec0ce25cf938
 ```
 
 </details>
