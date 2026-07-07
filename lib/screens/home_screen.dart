@@ -4,9 +4,10 @@ import '../widgets/item_card.dart';
 import 'about_screen.dart';
 import 'add_item_screen.dart';
 import 'community_rules_screen.dart';
+import 'feedback_screen.dart';
 
 // Opções do menu da AppBar
-enum _MenuOption { about, communityRules }
+enum _MenuOption { about, communityRules, feedback }
 
 class HomeScreen extends StatefulWidget {
   // Injetável para permitir fakes em testes; se omitido, usa o Firebase real
@@ -38,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (_) => switch (option) {
                   _MenuOption.about => const AboutScreen(),
                   _MenuOption.communityRules => const CommunityRulesScreen(),
+                  _MenuOption.feedback => FeedbackScreen(service: widget.service),
                 },
               ),
             ),
@@ -54,6 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListTile(
                   leading: Icon(Icons.gavel_outlined),
                   title: Text('Regras da comunidade'),
+                ),
+              ),
+              PopupMenuItem(
+                value: _MenuOption.feedback,
+                child: ListTile(
+                  leading: Icon(Icons.lightbulb_outline),
+                  title: Text('Enviar sugestão'),
                 ),
               ),
             ],

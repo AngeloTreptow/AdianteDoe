@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:adiantedoe/models/item_model.dart';
 import 'package:adiantedoe/screens/about_screen.dart';
 import 'package:adiantedoe/screens/community_rules_screen.dart';
+import 'package:adiantedoe/screens/feedback_screen.dart';
 import 'package:adiantedoe/screens/home_screen.dart';
 import 'package:adiantedoe/services/firebase_service.dart';
 import 'package:adiantedoe/widgets/item_card.dart';
@@ -91,5 +92,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(CommunityRulesScreen), findsOneWidget);
+  });
+
+  testWidgets('menu da AppBar abre a tela Enviar sugestão', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: HomeScreen(service: _FakeFirebaseService(const []))),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enviar sugestão'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FeedbackScreen), findsOneWidget);
   });
 }
