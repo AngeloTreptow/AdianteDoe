@@ -32,13 +32,20 @@ Future<void> _fillForm(WidgetTester tester,
       find.widgetWithText(TextFormField, 'WhatsApp (com DDD) *'), phone);
 }
 
+// Com o campo de descrição o formulário ficou mais alto que a viewport de
+// teste: rola até o botão antes de tocar
+Future<void> _tapPublish(WidgetTester tester) async {
+  await tester.ensureVisible(find.text('Publicar doação'));
+  await tester.tap(find.text('Publicar doação'));
+}
+
 void main() {
   testWidgets('submit vazio mostra erros de validação e não publica',
       (tester) async {
     final service = _FakeFirebaseService();
     await _pumpScreen(tester, service);
 
-    await tester.tap(find.text('Publicar doação'));
+    await _tapPublish(tester);
     await tester.pump();
 
     expect(find.text('Informe o nome do item'), findsOneWidget);
@@ -52,12 +59,31 @@ void main() {
     await _pumpScreen(tester, service);
 
     await _fillForm(tester);
-    await tester.tap(find.text('Publicar doação'));
+    await _tapPublish(tester);
     await tester.pumpAndSettle();
 
     expect(service.added, hasLength(1));
     expect(service.added.single.name, 'Sofá');
     expect(service.added.single.phone, '5551999998888');
+    // Descrição não preenchida é publicada como nula, não string vazia
+    expect(service.added.single.description, isNull);
+  });
+
+  testWidgets('descrição preenchida é publicada junto com o item',
+      (tester) async {
+    final service = _FakeFirebaseService();
+    await _pumpScreen(tester, service);
+
+    await _fillForm(tester);
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Descrição (opcional)'),
+      'Bom estado, retirar no centro.',
+    );
+    await _tapPublish(tester);
+    await tester.pumpAndSettle();
+
+    expect(service.added, hasLength(1));
+    expect(service.added.single.description, 'Bom estado, retirar no centro.');
   });
 
   testWidgets('falha ao publicar mostra SnackBar e reabilita o botão',
@@ -66,7 +92,7 @@ void main() {
     await _pumpScreen(tester, service);
 
     await _fillForm(tester);
-    await tester.tap(find.text('Publicar doação'));
+    await _tapPublish(tester);
     await tester.pumpAndSettle();
 
     expect(

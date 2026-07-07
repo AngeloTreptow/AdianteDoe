@@ -7,6 +7,7 @@ import 'package:adiantedoe/screens/community_rules_screen.dart';
 import 'package:adiantedoe/screens/home_screen.dart';
 import 'package:adiantedoe/services/firebase_service.dart';
 import 'package:adiantedoe/widgets/item_card.dart';
+import 'package:adiantedoe/widgets/report_button.dart';
 
 class _FakeFirebaseService extends FirebaseService {
   final List<ItemModel> items;
@@ -28,7 +29,7 @@ List<ItemModel> _makeItems(int count) => List.generate(
     );
 
 void main() {
-  setUp(ItemCard.resetReportCooldown);
+  setUp(ReportButton.resetReportCooldown);
 
   testWidgets('lista renderiza os itens do stream', (tester) async {
     await tester.pumpWidget(

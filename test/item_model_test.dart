@@ -10,6 +10,7 @@ void main() {
         id: 'abc',
         name: 'Sofá 2 lugares',
         phone: '5551999998888',
+        description: 'Bom estado, retirar no centro.',
         imageUrl: null,
         createdAt: DateTime(2026, 7, 5),
       );
@@ -18,10 +19,11 @@ void main() {
 
       expect(
         map.keys.toSet(),
-        {'name', 'phone', 'imageUrl', 'createdAt', 'expiresAt'},
+        {'name', 'phone', 'description', 'imageUrl', 'createdAt', 'expiresAt'},
       );
       expect(map['name'], 'Sofá 2 lugares');
       expect(map['phone'], '5551999998888');
+      expect(map['description'], 'Bom estado, retirar no centro.');
       expect(map['imageUrl'], isNull);
     });
   });
@@ -32,6 +34,7 @@ void main() {
       final item = ItemModel.fromMap('doc1', {
         'name': 'Cadeira',
         'phone': '5551999998888',
+        'description': 'Madeira maciça.',
         'imageUrl': 'https://firebasestorage.googleapis.com/foto.jpg',
         'createdAt': Timestamp.fromDate(createdAt),
       });
@@ -39,6 +42,7 @@ void main() {
       expect(item.id, 'doc1');
       expect(item.name, 'Cadeira');
       expect(item.phone, '5551999998888');
+      expect(item.description, 'Madeira maciça.');
       expect(item.imageUrl, 'https://firebasestorage.googleapis.com/foto.jpg');
       expect(item.createdAt, createdAt);
     });
@@ -54,11 +58,13 @@ void main() {
       expect(item.createdAt, isA<DateTime>());
     });
 
-    test('não quebra com campos ausentes', () {
+    test('não quebra com campos ausentes (documentos antigos sem descrição)',
+        () {
       final item = ItemModel.fromMap('doc3', <String, dynamic>{});
 
       expect(item.name, '');
       expect(item.phone, '');
+      expect(item.description, isNull);
       expect(item.imageUrl, isNull);
     });
   });

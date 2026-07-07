@@ -4,6 +4,8 @@ class ItemModel {
   final String id;
   final String name;
   final String phone;
+  // Descrição opcional: documentos antigos não têm o campo
+  final String? description;
   final String? imageUrl;
   final DateTime createdAt;
 
@@ -11,6 +13,7 @@ class ItemModel {
     required this.id,
     required this.name,
     required this.phone,
+    this.description,
     this.imageUrl,
     required this.createdAt,
   });
@@ -23,6 +26,7 @@ class ItemModel {
       id: id,
       name: data['name'] ?? '',
       phone: data['phone'] ?? '',
+      description: data['description'],
       imageUrl: data['imageUrl'],
       // Pode ser null no snapshot local enquanto o serverTimestamp está pendente
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -32,6 +36,7 @@ class ItemModel {
   Map<String, dynamic> toMap() => {
         'name': name,
         'phone': phone,
+        'description': description,
         'imageUrl': imageUrl,
         // Horário do servidor — as regras exigem createdAt == request.time
         'createdAt': FieldValue.serverTimestamp(),
