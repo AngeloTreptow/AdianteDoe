@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/firebase_service.dart';
 import '../widgets/item_card.dart';
+import 'about_screen.dart';
 import 'add_item_screen.dart';
+import 'community_rules_screen.dart';
+
+// Opções do menu da AppBar
+enum _MenuOption { about, communityRules }
 
 class HomeScreen extends StatefulWidget {
   // Injetável para permitir fakes em testes; se omitido, usa o Firebase real
@@ -24,6 +29,36 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
+        actions: [
+          PopupMenuButton<_MenuOption>(
+            tooltip: 'Menu',
+            onSelected: (option) => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => switch (option) {
+                  _MenuOption.about => const AboutScreen(),
+                  _MenuOption.communityRules => const CommunityRulesScreen(),
+                },
+              ),
+            ),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: _MenuOption.about,
+                child: ListTile(
+                  leading: Icon(Icons.info_outline),
+                  title: Text('Sobre o app'),
+                ),
+              ),
+              PopupMenuItem(
+                value: _MenuOption.communityRules,
+                child: ListTile(
+                  leading: Icon(Icons.gavel_outlined),
+                  title: Text('Regras da comunidade'),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: _itemsStream,

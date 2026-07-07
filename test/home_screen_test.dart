@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:adiantedoe/models/item_model.dart';
+import 'package:adiantedoe/screens/about_screen.dart';
+import 'package:adiantedoe/screens/community_rules_screen.dart';
 import 'package:adiantedoe/screens/home_screen.dart';
 import 'package:adiantedoe/services/firebase_service.dart';
 import 'package:adiantedoe/widgets/item_card.dart';
@@ -59,5 +61,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Seja o primeiro a doar'), findsOneWidget);
+  });
+
+  testWidgets('menu da AppBar abre a tela Sobre o app', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: HomeScreen(service: _FakeFirebaseService(const []))),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sobre o app'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AboutScreen), findsOneWidget);
+  });
+
+  testWidgets('menu da AppBar abre a tela Regras da comunidade',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: HomeScreen(service: _FakeFirebaseService(const []))),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Regras da comunidade'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CommunityRulesScreen), findsOneWidget);
   });
 }
