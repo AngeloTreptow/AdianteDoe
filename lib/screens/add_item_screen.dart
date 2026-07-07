@@ -178,6 +178,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   labelText: 'Nome do item *',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.inventory_2_outlined),
+                  hintText: 'Ex.: Sofá de 2 lugares',
                 ),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Informe o nome do item' : null,
               ),

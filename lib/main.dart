@@ -63,6 +63,11 @@ class AdianteDoeApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
+        // Placeholders (hintText) em cinza claro: o padrão do M3 é escuro
+        // demais e se confunde com o texto digitado pelo usuário
+        inputDecorationTheme: InputDecorationThemeData(
+          hintStyle: TextStyle(color: Colors.grey[400]),
+        ),
       ),
       home: const HomeScreen(),
     );
