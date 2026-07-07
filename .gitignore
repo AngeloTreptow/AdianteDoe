@@ -52,3 +52,4 @@ storage.rules
 
 # Certificados exportados
 *.cer
+debug_cert.txt

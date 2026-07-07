@@ -52,7 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
           final items = snapshot.data!;
           return ListView.builder(
             itemCount: items.length,
-            itemBuilder: (_, i) => ItemCard(item: items[i]),
+            itemBuilder: (_, i) =>
+                ItemCard(item: items[i], service: widget.service),
           );
         },
       ),
