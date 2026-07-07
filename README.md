@@ -91,6 +91,7 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 | 💬 **Contato com um toque** | Botão que abre o WhatsApp direto, com DDI +55 e mensagem padrão pré-preenchida — zero esforço para o interessado |
 | ⏳ **Curadoria automática** | Itens somem automaticamente após 14 dias, mantendo o feed limpo sem moderação manual |
 | 🛡️ **Validação inteligente** | DDDs brasileiros validados no cliente e regras de segurança aplicadas no servidor (Firebase Security Rules) |
+| 🚩 **Moderação comunitária** | Qualquer pessoa pode denunciar um item suspeito com um toque — sem criar conta. Uma denúncia por item por dispositivo, garantida no servidor |
 
 ---
 
@@ -150,6 +151,18 @@ O contato acontece pelo canal mais familiar do Brasil: o WhatsApp. Porque reduzi
 
 ---
 
+### 🚧 v2.1.0 — Moderação comunitária e proteção contra abuso *(em preparação)*
+*Problema resolvido: nenhum canal para a comunidade sinalizar golpes, e nada impedia denúncias em massa ou clientes adulterados.*
+
+- **Botão de denúncia** em cada item, com motivo opcional — a coleção `reports` é write-only para clientes (só o administrador lê)
+- **Login anônimo invisível** (Firebase Authentication): dá identidade ao dispositivo sem pedir cadastro — a filosofia "sem login" segue intacta na experiência
+- **Uma denúncia por item por dispositivo**, garantida no servidor: o documento usa ID determinístico `{uid}_{itemId}` e as regras bloqueiam duplicatas
+- **Cooldown de 30s** entre denúncias no cliente, contra toques repetidos
+- **App Check com Play Integrity**: atesta que as requisições vêm do app legítimo (em modo de monitoramento; bloqueio será ativado após validação das métricas)
+- Política de Privacidade atualizada: identificador anônimo e verificação de integridade documentados
+
+---
+
 ## 🏗️ Decisões de Engenharia
 
 > Por que essas tecnologias? Não foi acaso — foi escolha consciente.
@@ -174,9 +187,10 @@ O armazenamento de imagens via Firebase Storage permite CDN global out-of-the-bo
 
 ```
 lib/
-├── main.dart                  # Entrada + inicialização do Firebase
+├── main.dart                  # Entrada + Firebase, App Check e login anônimo transparente
 ├── models/
-│   └── item_model.dart        # Contrato de dados: tipagem forte, serialização limpa
+│   ├── item_model.dart        # Contrato de dados: tipagem forte, serialização limpa
+│   └── report_model.dart      # Denúncia write-only: sem fromMap, só o admin lê
 ├── services/
 │   ├── firebase_service.dart  # Acesso ao Firestore (injetável nas telas para testes)
 │   ├── storage_service.dart   # Upload isolado: fácil de trocar a implementação no futuro
@@ -187,11 +201,13 @@ lib/
 ├── utils/
 │   └── phone_validator.dart   # Validação de celular BR como função pura, coberta por testes
 └── widgets/
-    └── item_card.dart         # Componente reutilizável e desacoplado
+    └── item_card.dart         # Card do item + fluxo de denúncia com cooldown
 
 test/
 ├── phone_validator_test.dart  # DDDs, nono dígito e comprimento
 ├── item_model_test.dart       # Serialização e tolerância a dados incompletos
+├── report_model_test.dart     # Campos aceitos pelas regras e motivo opcional
+├── item_card_test.dart        # Denúncia: envio, cancelamento, cooldown e duplicata
 └── add_item_screen_test.dart  # Fluxo do formulário com serviço fake
 ```
 
@@ -207,6 +223,12 @@ items/
     ├── imageUrl   : String?    — URL pública no Storage (nullable)
     ├── createdAt  : Timestamp  — Horário do servidor (serverTimestamp)
     └── expiresAt  : Timestamp  — Consumido pela política de TTL do Firestore (14 dias)
+
+reports/
+└── {uid}_{itemId}              — ID determinístico: 1 denúncia por item por dispositivo
+    ├── itemId     : String     — Item denunciado
+    ├── reason     : String?    — Motivo opcional (até 200 caracteres)
+    └── createdAt  : Timestamp  — Horário do servidor (serverTimestamp)
 ```
 
 ### Segurança por design
@@ -217,6 +239,9 @@ As Firebase Security Rules garantem que nenhum dado inválido chegue ao banco, m
 - Escrita validada — lista fechada de campos, formato do telefone, `createdAt` igual ao horário do servidor e imagem restrita ao Firebase Storage
 - Edição e exclusão bloqueadas — nenhum cliente altera ou remove itens; a expiração é feita pela política de TTL do Firestore, no servidor
 - Storage restrito — apenas imagens de até 5MB, sem sobrescrita nem exclusão pelo app
+- Denúncias write-only — clientes só criam; leitura, edição e exclusão são exclusivas do administrador
+- Denúncia exige sessão (login anônimo) e o ID `{uid}_{itemId}` é validado no servidor — duplicata é rejeitada mesmo com cliente adulterado
+- App Check (Play Integrity) atesta a origem das requisições — hoje em modo de monitoramento, com bloqueio a ativar via console
 
 ---
 
@@ -258,7 +283,9 @@ armeabi-v7a: 90c3b6ea75aa580a6afff30b599864558556531670b09e22d69d2b4c43170c87
 Por motivos de segurança, arquivos sensíveis não estão no repositório. É necessário gerar e adicionar:
 
 1. `android/app/google-services.json` → gerado no console do Firebase ao registrar o app Android (obrigatório)
-2. As Security Rules do Firestore e do Storage também não são versionadas — configure-as no console do Firebase (validação de campos no `create`, exclusão bloqueada e TTL no campo `expiresAt`)
+2. As Security Rules do Firestore e do Storage também não são versionadas — configure-as no console do Firebase (validação de campos no `create`, exclusão bloqueada, TTL no campo `expiresAt` e regras da coleção `reports`)
+3. **Authentication** → habilite o provedor **Anônimo** (Sign-in method), usado pelas denúncias
+4. **App Check** → registre o app Android com o provider Play Integrity; para rodar em debug, cadastre o token de depuração que aparece no logcat
 
 Para gerar o APK de release também é necessário um keystore próprio referenciado em `android/key.properties` (fora do git).
 
@@ -294,7 +321,7 @@ O AdianteDoe+ foi construído com impacto mensurável em mente, alinhado aos Obj
 
 | Lei | Abordagem |
 |---|---|
-| LGPD (Lei 13.709/2018) | Coleta mínima de dados, sem armazenamento de e-mail ou CPF, e expiração automática em 14 dias |
+| LGPD (Lei 13.709/2018) | Coleta mínima de dados, sem armazenamento de e-mail ou CPF, expiração automática em 14 dias e identificador anônimo sem vínculo com dados pessoais (prevenção de abuso) |
 | Marco Civil da Internet (Lei 12.965/2014) | Aviso de responsabilidade sobre o conteúdo publicado exibido na tela de cadastro |
 
 📜 A **[Política de Privacidade](https://angelotreptow.github.io/AdianteDoe/)** completa está publicada via GitHub Pages e detalha quais dados são coletados, como são usados e por quanto tempo permanecem armazenados.
