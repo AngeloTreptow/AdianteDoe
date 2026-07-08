@@ -208,7 +208,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   labelText: 'WhatsApp (com DDD) *',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.phone),
-                  hintText: '(51) 98888-7777',
+                  hintText: '(51) 9XXXX-XXXX',
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return 'Informe o WhatsApp';
