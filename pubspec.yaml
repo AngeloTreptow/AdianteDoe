@@ -1,7 +1,7 @@
 name: adiantedoe
 description: "Aplicativo de doação e reutilização de itens entre comunidades."
 publish_to: 'none'
-version: 2.2.0+4
+version: 2.2.0+5
 
 environment:
   sdk: ^3.11.4
