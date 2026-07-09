@@ -12,7 +12,8 @@
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Status](https://img.shields.io/badge/status-produção-brightgreen?style=for-the-badge)
 
-[📲 Baixar APK](#-download) · [🏗️ Stack Técnica](#️-decisões-de-engenharia) · [🔒 Política de Privacidade](https://angelotreptow.github.io/AdianteDoe/)
+[📝 Quero Testar (Google Play)](#-teste-fechado-na-google-play) · [📲 Baixar APK](#-download) · [🏗️ Stack Técnica](#️-decisões-de-engenharia) · [🔒 Política de Privacidade](https://angelotreptow.github.io/AdianteDoe/)
+
 
 </div>
 
@@ -62,6 +63,28 @@
 
 </div>
 
+
+---
+
+## 🧪 Teste Fechado na Google Play
+
+> O AdianteDoe+ está entrando na Google Play Store através do programa de teste fechado — a etapa que antecede a publicação pública, exigida pelo Google para novas contas de desenvolvedor.
+
+O app já está disponível como APK direto (veja a seção [Download](#-download)), mas a versão distribuída pela **Google Play** exige que você seja adicionado manualmente à lista de testadores antes de conseguir instalar por lá.
+
+**Como participar:**
+
+1. Preencha o formulário abaixo com o e-mail da sua **Conta Google** (o mesmo que você usa na Play Store do seu celular)
+2. Você vai receber um link de confirmação — é só abrir e tocar em **"Tornar-se testador"**
+3. Depois disso, o AdianteDoe+ libera para download direto pela Google Play Store
+
+<div align="center">
+
+[![Cadastrar para o Teste Fechado](https://img.shields.io/badge/📝_Cadastrar_para_o_Teste_Fechado-4285F4?style=for-the-badge&logo=googleforms&logoColor=white)](https://docs.google.com/forms/d/e/1FAIpQLSfv2JNuxL30qvObwT1q-O3QF-MvFA1i6zf0AEDveRj5gIxR-A/viewform?usp=dialog)
+
+</div>
+
+> 💡 Prefere instalar direto, sem passar pela Play Store? O APK segue disponível manualmente na seção [Download](#-download) — mas a versão da Play Store é a forma recomendada, com atualizações automáticas e verificação de integridade do Google.
 
 ---
 
