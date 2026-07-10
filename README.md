@@ -80,7 +80,7 @@ O app já está disponível como APK direto (veja a seção [Download](#-downloa
 
 <div align="center">
 
-[![Cadastrar para o Teste Fechado](https://img.shields.io/badge/📝_Cadastrar_para_o_Teste_Fechado-4285F4?style=for-the-badge&logo=googleforms&logoColor=white)](https://docs.google.com/forms/d/e/1FAIpQLSfv2JNuxL30qvObwT1q-O3QF-MvFA1i6zf0AEDveRj5gIxR-A/viewform?usp=dialog)
+[![Cadastrar para o Teste Fechado](https://img.shields.io/badge/📝_Cadastrar_para_o_Teste_Fechado-4285F4?style=for-the-badge&logo=googleforms&logoColor=white)](https://docs.google.com/forms/d/e/1FAIpQLSeeOYMMlkpvOjTt6VqcV-SYLv0EBM6Q1gPjboSBZgm9liDCyQ/viewform?usp=header)
 
 </div>
 
